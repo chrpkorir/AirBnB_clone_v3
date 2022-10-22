@@ -81,7 +81,7 @@ class DBStorage:
         or None if not found
 
         Args::
-            cls: class 
+            cls: class
             id: string representing the object ID
         """
         if cls is not None and id is not None:
