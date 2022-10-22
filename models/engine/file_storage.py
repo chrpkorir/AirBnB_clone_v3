@@ -73,8 +73,17 @@ class FileStorage:
         pass
 
     def count(self, cls=None):
-        count = 0
+        """
+        count the number of objects in storage
+
+        args::
+            cls: class
+        """
         if cls is not None:
-            for _ in self.__objects.items():
-                count += 1
-        return count
+            classes_num = self.all(cls).values()
+            total_count = len(classes_num)
+        else:
+            classes_num = self.all().values()
+            total_count = len(classes_num)
+
+        return total_count
