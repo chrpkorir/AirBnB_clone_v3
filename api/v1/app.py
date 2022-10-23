@@ -16,12 +16,15 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
 
+
 @app.teardown_appcontext
 def tear_down_db():
     """closes the sdb session"""
     storage.close()
 
+
 if __name__ == "__main__":
+
     app.run(
             host=host_env, port=port_env,
             debug=True, threaded=True
