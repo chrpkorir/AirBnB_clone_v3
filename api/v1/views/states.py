@@ -4,7 +4,7 @@ handles all default RESTFul API actions to states
 """
 
 from api.v1.views import app_views
-from flask import abort, jsonify, make_response
+from flask import abort, jsonify, make_response, request
 from models.state import State
 from models import storage
 
@@ -55,3 +55,23 @@ def delete_state(state_id):
         storage.save()
 
     return make_response(jsonify({}), 200)
+
+
+@app_views.route('/states/<state_id>', methods=['POST'])
+def add_state():
+    """
+    add a new state using POST request
+    """
+    if not request.json:
+        abort(400, "Not a JSON")
+    else:
+        state_data = request.json
+        if 'name' not in state_data.keys():
+            abort(400, "Missing name")
+        state_instance = State(**state_data)
+        storage.new(state_instance)
+        storage.save()
+
+        state_response = state_instance.to_dict()
+
+    return make_response(jsonify(state_response), 201)
