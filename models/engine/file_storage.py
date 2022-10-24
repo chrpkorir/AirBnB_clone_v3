@@ -73,7 +73,6 @@ class FileStorage:
         """
         Returns the object based on the class and its ID,
         or None if not found
-
         Args::
             cls: class
             id: string representing the object ID
@@ -91,7 +90,6 @@ class FileStorage:
     def count(self, cls=None):
         """
         count the number of objects in storage
-
         args::
             cls: class
         """
