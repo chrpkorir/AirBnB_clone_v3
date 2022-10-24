@@ -75,3 +75,28 @@ def add_state():
         state_response = state_instance.to_dict()
 
     return make_response(jsonify(state_response), 201)
+
+
+@app_views.route('/states/<state_id>', methods=['PUT'])
+def update_states(state_id):
+    """
+    updates a state object
+
+    Args::
+        state_id: the state object's id
+    """
+    get_state = storage.get('State', state_id)
+
+    if get_state is None:
+        abort(404)
+    elif not request.json:
+        abort(400, "Not a JSON")
+    else:
+        state_data = request.json
+        for key, value in state_data:
+            setattr(state_data, key, value)
+
+        storage.save()
+        state_response = get_state.to_dict()
+
+    return make_response(jsonify(state_response), 200)
