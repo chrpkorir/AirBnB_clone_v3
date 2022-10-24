@@ -5,7 +5,6 @@ from os import getenv
 from models import storage
 from api.v1.views import app_views
 from flask import Flask
-from flask import Blueprint
 
 """Host and port env variables"""
 host_env = getenv('HBNB_API_HOST') or '0.0.0.0'
@@ -18,7 +17,7 @@ app.register_blueprint(app_views)
 
 
 @app.teardown_appcontext
-def tear_down_db():
+def tear_down_db(error):
     """closes the sdb session"""
     storage.close()
 
@@ -27,5 +26,5 @@ if __name__ == "__main__":
 
     app.run(
             host=host_env, port=port_env,
-            debug=True, threaded=True
+            threaded=True
             )
