@@ -64,15 +64,14 @@ def add_state():
     """
     if not request.json:
         abort(400, "Not a JSON")
-    else:
-        state_data = request.json
-        if 'name' not in state_data.keys():
-            abort(400, "Missing name")
-        state_instance = State(**state_data)
-        storage.new(state_instance)
-        storage.save()
 
-        state_response = state_instance.to_dict()
+    state_data = request.json
+    if 'name' not in state_data.keys():
+        abort(400, "Missing name")
+    state_instance = State(**state_data)
+    storage.new(state_instance)
+    storage.save()
+    state_response = state_instance.to_dict()
 
     return make_response(jsonify(state_response), 201)
 
@@ -89,14 +88,15 @@ def update_states(state_id):
 
     if get_state is None:
         abort(404)
-    elif not request.json:
-        abort(400, "Not a JSON")
-    else:
-        state_data = request.json
-        for key, value in state_data:
-            setattr(state_data, key, value)
 
-        storage.save()
-        state_response = get_state.to_dict()
+    if not request.json:
+        abort(400, "Not a JSON")
+
+    state_data = request.json
+    for key, value in state_data:
+        setattr(state_data, key, value)
+
+    storage.save()
+    state_response = get_state.to_dict()
 
     return make_response(jsonify(state_response), 200)
