@@ -48,3 +48,21 @@ def amenity_post(state_id=None):
     storage.new(new_amenity)
     storage.save()
     return make_response(jsonify(new_amenity.to_dict()), 201)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'])
+def amenity_put(amenity_id=None):
+    """Update Amenity object"""
+    if not request.get_json():
+        return make_response(jsonify({'error': 'Not a JSON'}), 400)
+
+    dict_body = request.get_json()
+    amenity_obj = storage.get(Amenity, amenity_id)
+    if amenity_obj:
+        for key, value in dict_body.items():
+            if key != "id" and key != "created_at" and key != "updated_at":
+                setattr(amenity_obj, key, value)
+        storage.save()
+        return make_response(jsonify(amenity_obj.to_dict()), 200)
+    else:
+        return abort(404)
