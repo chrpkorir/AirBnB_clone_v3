@@ -48,7 +48,7 @@ def delete_city(city_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route('/cities/<city_id>', method=['POST'])
+@app_views.route('/cities/<city_id>', methods=['POST'])
 def add_city(state_id):
     """
     post a city object
