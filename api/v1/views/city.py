@@ -66,3 +66,28 @@ def add_city(state_id):
     instance = City(**data)
     storage.new(instance)
     storage.save()
+
+    city_response = instance.to_dict()
+
+    return make_response(jsonify(city_response), 201)
+
+
+@app_views.route('/cities/<city_id>')
+def update_city(city_id):
+    """
+    update a city object
+    """
+    city = storage.get('City', city_id)
+    if city is None:
+        abort(404)
+
+    if not request.json:
+        abort(400, "Not a JSON")
+
+    data = request.json
+    for key, value in data.items():
+        setattr(city, key, value)
+
+    storage.save()
+
+    return make_response(jsonify(city.to_dict()), 200)
