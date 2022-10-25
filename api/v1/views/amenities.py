@@ -2,7 +2,7 @@
 """ handles API calls to the amenity """
 
 from api.v1.views import app_views
-from flask import abort, jsonify
+from flask import abort, jsonify, make_response
 from models.amenity import Amenity
 from models import storage
 
@@ -21,4 +21,15 @@ def amenity_by_id(amenity_id=None):
     amenity_obj = storage.get(Amenity, amenity_id)
     if amenity_obj:
         return jsonify(amenity_obj.to_dict())
+    abort(404)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
+def delete_amenity(amenity_id=None):
+    """Deletes an Amenity object by its id"""
+    amenity_objs = storage.get(Amenity, amenity_id)
+    if amenity_objs:
+        storage.delete(amenity_objs)
+        storage.save()
+        return make_response(jsonify({}), 200)
     abort(404)
