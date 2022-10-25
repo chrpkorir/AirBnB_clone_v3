@@ -2,7 +2,7 @@
 """handle API functionson the city object"""
 
 from api.v1.views import app_views
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, make_response
 from models.city import City
 from models import storage
 
@@ -31,3 +31,18 @@ def list_cities(city_id):
 
     cities_response = get_cities.to_dict()
     return jsonify(cities_response)
+
+
+@app_views.route('/cities/<city_id>', methods=['DELETE'])
+def delete_city(city_id):
+    """
+    deletes a city object using it's id
+    """
+    city = storage.get('City', city_id)
+    if city is None:
+        abort(404)
+
+    storage.delete(city)
+    storage.save()
+
+    return make_response(jsonify({}), 200)
