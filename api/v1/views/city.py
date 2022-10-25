@@ -61,7 +61,7 @@ def add_city(state_id):
 
     state = storage.get("State", state_id)
     if state is None:
-            abort(404)
+        abort(404)
     data['state_id'] = state_id
     instance = City(**data)
     storage.new(instance)
