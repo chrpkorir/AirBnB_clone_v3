@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-""" handle API requests relevant to users """
-
+"""New view for User object that handles all default Restfullapi actions"""
 from models import storage
 from models.user import User
 from api.v1.views import app_views

@@ -1,43 +1,42 @@
 #!/usr/bin/python3
-"""returns the status of the API"""
-
-from os import getenv
+""" Status of our API """
 from models import storage
 from api.v1.views import app_views
-from flask import Flask, jsonify, make_response
+from os import getenv
+from flask import Flask, make_response, jsonify
+from flask import Blueprint
 from flask_cors import CORS
 
 """Host and port env variables"""
 host_env = getenv('HBNB_API_HOST') or '0.0.0.0'
 port_env = getenv('HBNB_API_PORT') or 5000
 
-
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
-
-"""CORS instance allowing: /* for 0.0.0.0"""
-cors = CORS(app, resources={r"/api/v1/*": {"0.0.0.0"}})
+""" Cors access to selected resources from a different origin."""
+cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
 
 
 @app.teardown_appcontext
-def tear_down_db(error):
-    """closes the sdb session"""
+def teardown_db(error):
+    """ Close db session """
     storage.close()
 
 
 @app.errorhandler(404)
-def handle_404(error):
+def not_found(error):
     """
-    handle page not found error
+    Method to manage the url's that does'nt exist
     """
-    response = {"error": "Not found"}
-    return make_response(jsonify(response), 404)
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == "__main__":
-
+    """
+    Main Function
+    """
     app.run(
-            host=host_env, port=port_env,
-            threaded=True
-            )
+        host=host_env, port=port_env,
+        debug=True, threaded=True,
+    )
